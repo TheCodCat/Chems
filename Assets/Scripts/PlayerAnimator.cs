@@ -47,9 +47,12 @@ public class PlayerAnimator : MonoBehaviour
 
         animator.SetFloat(speedHash, speed, speedDampTime, Time.deltaTime);
 
+        AimController aim = GetComponent<AimController>();
+
         bool isSprinting =
             sprintAction.IsPressed() &&
-            speed > 0.1f;
+            speed > 0.1f &&
+            (aim == null || !aim.IsAiming());
 
         animator.SetBool(isSprintingHash, isSprinting);
     }

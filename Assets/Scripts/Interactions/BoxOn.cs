@@ -1,22 +1,21 @@
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+public class BoxOn : MonoBehaviour, IInteractable
 {
+    public GameObject target;
     bool isOn = false;
-    [SerializeField] private GameObject target;
 
     public void Interact()
     {
         if (isOn)
         {
-            target.SetActive(false);
             isOn = false;
+            target.SetActive(false);
         }
-
         else
         {
-            target.SetActive(true);
             isOn = true;
+            target.SetActive(true);
         }
     }
 }

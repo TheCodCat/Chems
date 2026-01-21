@@ -15,6 +15,7 @@ public class ThirdPersonMovement : MonoBehaviour
     CharacterController controller;
     PlayerInput input;
     Transform cam;
+    AimController aimController;
 
 
     InputAction moveAction;
@@ -27,6 +28,7 @@ public class ThirdPersonMovement : MonoBehaviour
         controller = GetComponent<CharacterController>();
         input = GetComponent<PlayerInput>();
         cam = Camera.main.transform;
+        aimController = GetComponent<AimController>();
 
 
         moveAction = input.actions["Move"];
@@ -56,12 +58,13 @@ public class ThirdPersonMovement : MonoBehaviour
 
         Vector3 moveDir = camForward * inputVector.y + camRight * inputVector.x;
 
-        float speed = sprintAction.IsPressed() ? sprintSpeed : walkSpeed;
+        bool canSprint = sprintAction.IsPressed() && (aimController == null || !aimController.IsAiming());
+        float speed = canSprint ? sprintSpeed : walkSpeed;
 
         controller.Move(moveDir * speed * Time.deltaTime);
         CurrentSpeed = controller.velocity.magnitude;
 
-        if (moveDir.sqrMagnitude > 0.01f)
+        if (moveDir.sqrMagnitude > 0.01f && !GetComponent<AimController>().IsAiming())
         {
             Vector3 lookDir = camForward;
             lookDir.y = 0;
