@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 /// Updates Animator parameters based on player movement.
 /// Animation always follows gameplay — never the other way around.
 /// </summary>
-[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(ThirdPersonMovement))]
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerAnimator : MonoBehaviour
@@ -25,7 +24,6 @@ public class PlayerAnimator : MonoBehaviour
 
     void Awake()
     {
-        if (!animator) animator = GetComponent<Animator>();
         if (!playerMovement) playerMovement = GetComponent<ThirdPersonMovement>();
 
         input = GetComponent<PlayerInput>();
