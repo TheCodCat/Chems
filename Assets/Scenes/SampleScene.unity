@@ -319,8 +319,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212338, y: 0.000000041656325, z: -0.000000006411522, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 2.4464116, z: -2.0444338}
+  m_LocalRotation: {x: 0.15212338, y: -0.000000013935001, z: 0.0000000021448017, w: 0.98836154}
+  m_LocalPosition: {x: 0, y: 2.4014115, z: -1.9074339}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -977,7 +977,7 @@ MonoBehaviour:
   TargetOffset: {x: 0, y: 0, z: 0}
   TrackerSettings:
     BindingMode: 4
-    PositionDamping: {x: 1, y: 1, z: 1}
+    PositionDamping: {x: 0, y: 0, z: 0}
     AngularDampingMode: 0
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
@@ -994,7 +994,7 @@ MonoBehaviour:
       Radius: 2.5
       Height: 0.1
     SplineCurvature: 0.5
-  RecenteringTarget: 3
+  RecenteringTarget: 2
   HorizontalAxis:
     Value: 0
     Center: 0
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
   Priority:
-    Enabled: 0
+    Enabled: 1
     m_Value: 0
   OutputChannel: 1
   StandbyUpdate: 2
@@ -1076,8 +1076,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1418269145}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15212338, y: 0.000000041656325, z: -0.0000000064115206, w: 0.98836154}
-  m_LocalPosition: {x: 0, y: 2.4464116, z: -2.0444338}
+  m_LocalRotation: {x: 0.15212338, y: -0.000000013935001, z: 0.0000000021448014, w: 0.98836154}
+  m_LocalPosition: {x: 0, y: 2.4014115, z: -1.9074339}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1151,7 +1151,7 @@ Transform:
   m_GameObject: {fileID: 1517778527}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.845, z: -0.137}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1171,6 +1171,7 @@ GameObject:
   - component: {fileID: 1745601062}
   - component: {fileID: 1745601061}
   - component: {fileID: 1745601060}
+  - component: {fileID: 1745601065}
   m_Layer: 6
   m_Name: PlayerRoot
   m_TagString: Untagged
@@ -1293,6 +1294,62 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.2, z: 0}
+--- !u!114 &1745601065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745601057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2972b821ef5ced4388f6dbd6f06ecb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CMChangeView
+  right: {x: 2, y: 1.8, z: 0}
+  left: {x: -2, y: 1.8, z: 0}
+  target: {fileID: 1517778528}
+  duration: 0.5
+  actionRight:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Action Right
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 45edc91f-c6a2-4448-8eb2-e3341a3bba95
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 41b2545e-96a9-4ba9-bbd7-a2dc124c6319
+        m_Path: <Keyboard>/e
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Action Right
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  actionLeft:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Action Left
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 34ee987b-0a7b-4579-b065-078fa1bf095b
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: aee61944-2fea-4471-b1d7-89ae8c179840
+        m_Path: <Keyboard>/q
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Action Left
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
