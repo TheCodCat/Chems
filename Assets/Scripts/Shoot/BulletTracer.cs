@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BulletTracer : MonoBehaviour
 {
-    public float lifeTime = 0.05f;
+    public float lifeTime = 0.1f;
 
     LineRenderer line;
 

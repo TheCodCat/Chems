@@ -19,6 +19,9 @@ public class Shooter : MonoBehaviour
     [SerializeField] private BulletTracer tracerPrefab;
     [SerializeField] private Transform muzzle;
 
+    [Header("Damage")]
+    [SerializeField] private float damage = 25f;
+
     float nextFireTime;
 
     void Awake()
@@ -63,8 +66,13 @@ public class Shooter : MonoBehaviour
         {
             endPoint = hit.point;
             Debug.Log("Hit: " + hit.collider.name);
-        }
 
+            Health health = hit.collider.GetComponentInParent<Health>();
+            if (health != null)
+            {
+                health.TakeDamage(damage);
+            }
+        }
         SpawnTracer(startPoint, endPoint);
     }
     void SpawnTracer(Vector3 start, Vector3 end)
