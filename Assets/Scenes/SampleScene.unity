@@ -272,17 +272,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276718381}
-  m_LocalRotation: {x: 0.14520451, y: -0.69203734, z: 0.14520451, w: 0.69203734}
-  m_LocalPosition: {x: 0, y: 0, z: 0.075}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1000658692}
   m_Father: {fileID: 1576084934}
-  m_LocalEulerAnglesHint: {x: 23.7, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.874, y: 0.468}
+  m_AnchoredPosition: {x: 0, y: 1}
   m_SizeDelta: {x: 556, y: 505}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &276718383
@@ -1255,7 +1255,6 @@ GameObject:
   - component: {fileID: 1000658692}
   - component: {fileID: 1000658694}
   - component: {fileID: 1000658693}
-  - component: {fileID: 1000658695}
   m_Layer: 5
   m_Name: InteractHint
   m_TagString: Untagged
@@ -1272,8 +1271,8 @@ RectTransform:
   m_GameObject: {fileID: 1000658691}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: -0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 276718382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1382,21 +1381,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000658691}
   m_CullTransparentMesh: 1
---- !u!114 &1000658695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000658691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d86c230612e82c243a14abd57b546b43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::HintOrbitLook
-  target: {fileID: 1576084934}
-  radius: 0.4
-  height: 1.6
 --- !u!1 &1350335793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1807,9 +1791,10 @@ GameObject:
   - component: {fileID: 1576084938}
   - component: {fileID: 1576084937}
   - component: {fileID: 1576084936}
-  - component: {fileID: 1576084935}
   - component: {fileID: 1576084940}
   - component: {fileID: 1576084941}
+  - component: {fileID: 1576084942}
+  - component: {fileID: 1576084943}
   m_Layer: 0
   m_Name: Box
   m_TagString: Untagged
@@ -1833,33 +1818,6 @@ Transform:
   - {fileID: 276718382}
   m_Father: {fileID: 1388246876}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &1576084935
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1576084933}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &1576084936
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1974,8 +1932,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoxOn
   <keyType>k__BackingField: 0
   keyView: {fileID: 1000658693}
-  UI: {fileID: 1000658691}
+  parent: {fileID: 1388246876}
   target: {fileID: 1350335793}
+--- !u!114 &1576084942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576084933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 1576084943}
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}
+--- !u!114 &1576084943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576084933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67572d45464e77d4e8f00a331038c454, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TriggerObjContext
+  parent: {fileID: 1000658692}
 --- !u!1 &1745601057
 GameObject:
   m_ObjectHideFlags: 0
