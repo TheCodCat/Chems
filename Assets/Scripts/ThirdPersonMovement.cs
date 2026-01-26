@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 [RequireComponent(typeof(CharacterController))]
 public class ThirdPersonMovement : MonoBehaviour
@@ -12,8 +13,8 @@ public class ThirdPersonMovement : MonoBehaviour
     public float CurrentSpeed { get; private set; }
 
 
+    [Inject] public PlayerInput input;
     CharacterController controller;
-    PlayerInput input;
     Transform cam;
     AimController aimController;
 
