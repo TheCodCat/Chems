@@ -1,35 +1,45 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.InputSystem;
+using Zenject;
+using System;
 
-public class CMChangeView : MonoBehaviour
+public class CMChangeView : MonoBehaviour, IInitializable, IDisposable
 {
     [SerializeField] private Vector3 right;
     [SerializeField] private Vector3 left;
     [SerializeField] private Transform target;
     [SerializeField] private float duration;
+    [SerializeField] private bool isRight = true;
 
-    [SerializeField] private InputActionProperty actionRight;
-    [SerializeField] private InputActionProperty actionLeft;
-
-    private void Start()
-    {
-        actionRight.action.Enable();
-        actionLeft.action.Enable();
-
-        actionRight.action.performed += Action_performedR;
-        actionLeft.action.performed += Action_performedL;
-    }
+    [SerializeField] private InputActionProperty actionChange;
 
     private void Action_performedR(InputAction.CallbackContext obj)
     {
-        var tween = target.transform.DOLocalMove(right, duration);
-        tween.Play();
+        isRight = !isRight;
+        var tweeen = isRight switch
+        {
+            true => target.transform.DOLocalMove(right, duration),
+            false => target.transform.DOLocalMove(left, duration)
+        };
+        tweeen.Play();
     }
 
     private void Action_performedL(InputAction.CallbackContext obj)
     {
         var tween = target.transform.DOLocalMove(left, duration);
         tween.Play();
+    }
+
+    public void Initialize()
+    {
+        actionChange.action.Enable();
+        actionChange.action.performed += Action_performedR;
+    }
+
+    public void Dispose()
+    {
+        actionChange.action.Disable();
+        actionChange.action.performed -= Action_performedR;
     }
 }

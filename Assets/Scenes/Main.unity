@@ -3702,6 +3702,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: actionChange.m_Action.m_Name
+      value: Action Change
+      objectReference: {fileID: 0}
+    - target: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: actionChange.m_Action.m_SingletonActionBindings.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: actionChange.m_Action.m_SingletonActionBindings.Array.data[0].m_Id
+      value: a8a93b48-c921-49a7-b953-03c1dd7cfb73
+      objectReference: {fileID: 0}
+    - target: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: actionChange.m_Action.m_SingletonActionBindings.Array.data[0].m_Path
+      value: <Keyboard>/x
+      objectReference: {fileID: 0}
+    - target: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: actionChange.m_Action.m_SingletonActionBindings.Array.data[0].m_Action
+      value: Action Change
+      objectReference: {fileID: 0}
     - target: {fileID: 2720168813284258234, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
       propertyPath: m_Name
       value: PlayerRoot
@@ -3714,6 +3734,10 @@ PrefabInstance:
       propertyPath: thirdPerson
       value: 
       objectReference: {fileID: 1359292064}
+    - target: {fileID: 3369478891880853688, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+      propertyPath: CMChangeView
+      value: 
+      objectReference: {fileID: 1359292073}
     - target: {fileID: 5202259810017102848, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.71
@@ -3790,6 +3814,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8164b4deeb33d49ae3a52a516047a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AimController
+--- !u!114 &1359292073 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 368734277267131647, guid: 732102a1be7da7e4f990c6265c1f6df6, type: 3}
+  m_PrefabInstance: {fileID: 1359292063}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2972b821ef5ced4388f6dbd6f06ecb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CMChangeView
 --- !u!4 &1368596131 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400010, guid: 1031352e06449434ab7c3ba79eee9918, type: 3}
