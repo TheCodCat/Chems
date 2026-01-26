@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+
+
 public class EnemyAI : MonoBehaviour
 {
+    float lastSeenTime;
     public enum State { Patrol, Chase, Attack }
 
     [Header("Detection")]
@@ -14,6 +17,10 @@ public class EnemyAI : MonoBehaviour
     [Header("Patrol")]
     public float patrolRadius = 10f;
     public float patrolDelay = 3f;
+
+    [Header("Lose Player")]
+    public float loseDistance = 20f;
+    public float loseTime = 3f;
 
     NavMeshAgent agent;
     Transform player;
@@ -70,6 +77,7 @@ public class EnemyAI : MonoBehaviour
             if (!Physics.Raycast(transform.position + Vector3.up, dir, viewRadius, obstacleMask))
             {
                 player = t;
+                lastSeenTime = Time.time;
                 state = State.Chase;
                 return;
             }
@@ -85,6 +93,20 @@ public class EnemyAI : MonoBehaviour
         }
 
         float dist = Vector3.Distance(transform.position, player.position);
+
+        // Remember if still visible
+        Vector3 dir = (player.position - transform.position).normalized;
+        if (!Physics.Raycast(transform.position + Vector3.up, dir, dist, obstacleMask))
+            lastSeenTime = Time.time;
+
+        // Lose player
+        if (dist > loseDistance || Time.time - lastSeenTime > loseTime)
+        {
+            player = null;
+            agent.isStopped = false;
+            state = State.Patrol;
+            return;
+        }
 
         if (dist <= attackRange)
         {
@@ -107,6 +129,20 @@ public class EnemyAI : MonoBehaviour
         }
 
         float dist = Vector3.Distance(transform.position, player.position);
+
+        // Remember visibility
+        Vector3 dir = (player.position - transform.position).normalized;
+        if (!Physics.Raycast(transform.position + Vector3.up, dir, dist, obstacleMask))
+            lastSeenTime = Time.time;
+
+        // Lose player
+        if (dist > loseDistance || Time.time - lastSeenTime > loseTime)
+        {
+            player = null;
+            agent.isStopped = false;
+            state = State.Patrol;
+            return;
+        }
 
         if (dist > attackRange)
         {
