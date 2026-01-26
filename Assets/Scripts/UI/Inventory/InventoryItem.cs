@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -6,16 +7,24 @@ using Zenject;
 
 public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IPointerEnterHandler
 {
+    [field: SerializeField] public InventoryItemObj itemObj { get; private set; }
+    [field: SerializeField] public int count { get; set; } = 1;
     [SerializeField] private Image image;
+    [SerializeField] private TMP_Text counter;
+    
     [SerializeField] private InputActionProperty mouseAction;
     [SerializeField] private Vector2 mousePosition;
     public Transform parentAfterDrag;
-    private InventorySlot[] slots;
 
-    [Inject]
-    public void Construct(InventorySlot[] inventorySlots)
+    public void Construct(InventoryItemObj inventoryItemObj)
     {
-        slots = inventorySlots;
+        itemObj = inventoryItemObj;
+        RefrashCount();
+    }
+
+    public void RefrashCount()
+    {
+        counter.text = count.ToString();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -27,11 +36,6 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
         image.raycastTarget = false;
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.root);
-
-        foreach (var item in slots)
-        {
-            item.NullItemToSlot(this);
-        }
     }
 
     private void Action_performed(InputAction.CallbackContext obj)
@@ -48,8 +52,8 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IEndDragHandler, 
         mouseAction.action.performed -= Action_performed;
         transform.SetParent(parentAfterDrag);
 
-        if( parentAfterDrag.TryGetComponent(out InventorySlot component))
-            component.inventoryItem = this;
+        //if( parentAfterDrag.TryGetComponent(out InventorySlot component))
+        //    component.inventoryItem = this;
     }
 
     public void OnDrag(PointerEventData eventData)
