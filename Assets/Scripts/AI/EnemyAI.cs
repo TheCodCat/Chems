@@ -1,165 +1,134 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-
-
 public class EnemyAI : MonoBehaviour
 {
-    float lastSeenTime;
-    public enum State { Patrol, Chase, Attack }
+    [Header("References")]
+    [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private EnemyShooter shooter;
 
-    [Header("Detection")]
-    public float viewRadius = 12f;
-    public float attackRange = 8f;
-    public LayerMask playerMask;
-    public LayerMask obstacleMask;
+    [Header("Target")]
+    [SerializeField] private Transform player;
+
+    [Header("Ranges")]
+    [SerializeField] private float detectRange = 20f;
+    [SerializeField] private float attackRange = 12f;
+    [SerializeField] private float loseRange = 30f;
 
     [Header("Patrol")]
-    public float patrolRadius = 10f;
-    public float patrolDelay = 3f;
+    [SerializeField] private float patrolRadius = 10f;
+    [SerializeField] private float patrolDelay = 3f;
 
-    [Header("Lose Player")]
-    public float loseDistance = 20f;
-    public float loseTime = 3f;
-
-    NavMeshAgent agent;
-    Transform player;
-    EnemyShooter shooter;
-
-    State state;
     float patrolTimer;
+    Vector3 patrolPoint;
+    bool hasPatrolPoint;
+
+    enum State
+    {
+        Patrol,
+        Chase,
+        Attack
+    }
+
+    State currentState;
 
     void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        shooter = GetComponent<EnemyShooter>();
-        state = State.Patrol;
+        if (!agent)
+            agent = GetComponent<NavMeshAgent>();
+
+        if (!shooter)
+            shooter = GetComponent<EnemyShooter>();
     }
 
     void Update()
     {
-        switch (state)
+        if (!player)
+            FindPlayer();
+
+        if (!player)
+            return;
+
+        float dist = Vector3.Distance(transform.position, player.position);
+
+        switch (currentState)
         {
-            case State.Patrol: Patrol(); break;
-            case State.Chase: Chase(); break;
-            case State.Attack: Attack(); break;
+            case State.Patrol:
+                Patrol();
+                if (dist <= detectRange)
+                    currentState = State.Chase;
+                break;
+
+            case State.Chase:
+                Chase();
+                if (dist <= attackRange)
+                    currentState = State.Attack;
+                else if (dist > loseRange)
+                    currentState = State.Patrol;
+                break;
+
+            case State.Attack:
+                Attack();
+                if (dist > attackRange)
+                    currentState = State.Chase;
+                else if (dist > loseRange)
+                    currentState = State.Patrol;
+                break;
         }
     }
 
     void Patrol()
     {
-        patrolTimer -= Time.deltaTime;
+        shooter.enabled = false;
 
-        if (!agent.hasPath || patrolTimer <= 0)
+        patrolTimer += Time.deltaTime;
+
+        if (!hasPatrolPoint || patrolTimer >= patrolDelay)
         {
+            patrolTimer = 0;
+            hasPatrolPoint = true;
+
             Vector3 random = Random.insideUnitSphere * patrolRadius;
             random += transform.position;
 
             if (NavMesh.SamplePosition(random, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
             {
-                agent.SetDestination(hit.position);
-                patrolTimer = patrolDelay;
-            }
-        }
-
-        LookForPlayer();
-    }
-
-    void LookForPlayer()
-    {
-        Collider[] hits = Physics.OverlapSphere(transform.position, viewRadius, playerMask);
-
-        foreach (var col in hits)
-        {
-            Transform t = col.transform;
-            Vector3 dir = (t.position - transform.position).normalized;
-
-            if (!Physics.Raycast(transform.position + Vector3.up, dir, viewRadius, obstacleMask))
-            {
-                player = t;
-                lastSeenTime = Time.time;
-                state = State.Chase;
-                return;
+                patrolPoint = hit.position;
+                agent.SetDestination(patrolPoint);
             }
         }
     }
 
     void Chase()
     {
-        if (!player)
-        {
-            state = State.Patrol;
-            return;
-        }
-
-        float dist = Vector3.Distance(transform.position, player.position);
-
-        // Remember if still visible
-        Vector3 dir = (player.position - transform.position).normalized;
-        if (!Physics.Raycast(transform.position + Vector3.up, dir, dist, obstacleMask))
-            lastSeenTime = Time.time;
-
-        // Lose player
-        if (dist > loseDistance || Time.time - lastSeenTime > loseTime)
-        {
-            player = null;
-            agent.isStopped = false;
-            state = State.Patrol;
-            return;
-        }
-
-        if (dist <= attackRange)
-        {
-            agent.isStopped = true;
-            state = State.Attack;
-            return;
-        }
+        shooter.enabled = false;
 
         agent.isStopped = false;
         agent.SetDestination(player.position);
-        FaceTarget(player);
     }
 
     void Attack()
     {
-        if (!player)
+        agent.isStopped = true;
+
+        shooter.enabled = true;
+        shooter.SetTarget(player);
+
+        // face target smoothly
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0;
+
+        if (dir.sqrMagnitude > 0.01f)
         {
-            state = State.Patrol;
-            return;
+            Quaternion rot = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 6f);
         }
-
-        float dist = Vector3.Distance(transform.position, player.position);
-
-        // Remember visibility
-        Vector3 dir = (player.position - transform.position).normalized;
-        if (!Physics.Raycast(transform.position + Vector3.up, dir, dist, obstacleMask))
-            lastSeenTime = Time.time;
-
-        // Lose player
-        if (dist > loseDistance || Time.time - lastSeenTime > loseTime)
-        {
-            player = null;
-            agent.isStopped = false;
-            state = State.Patrol;
-            return;
-        }
-
-        if (dist > attackRange)
-        {
-            agent.isStopped = false;
-            state = State.Chase;
-            return;
-        }
-
-        FaceTarget(player);
-        shooter.ShootAt(player);
     }
 
-    void FaceTarget(Transform target)
+    void FindPlayer()
     {
-        Vector3 dir = (target.position - transform.position);
-        dir.y = 0;
-        Quaternion rot = Quaternion.LookRotation(dir);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 8f);
+        GameObject p = GameObject.FindGameObjectWithTag("Player");
+        if (p)
+            player = p.transform;
     }
 }

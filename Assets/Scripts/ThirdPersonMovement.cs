@@ -28,8 +28,6 @@ public class ThirdPersonMovement : MonoBehaviour, IInitializable
     {
         HandleMovement();
         HandleGravity();
-        Debug.Log(CurrentSpeed);
-
     }
 
     void HandleMovement()

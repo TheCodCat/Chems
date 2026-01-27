@@ -2,47 +2,66 @@ using UnityEngine;
 
 public class EnemyShooter : MonoBehaviour
 {
-    [SerializeField] private Transform firePoint;
-    [SerializeField] private float fireRate = 0.6f;
-    [SerializeField] private float damage = 10f;
-    [SerializeField] private float fireDistance = 50f;
-    [Header("Tracer")]
-    [SerializeField] private BulletTracer tracerPrefab;
+    [Header("References")]
     [SerializeField] private Transform muzzle;
+    [SerializeField] private Transform target;
+
+    [Header("Projectile")]
+    [SerializeField] private BulletProjectile bulletPrefab;
+
+    [Header("Fire Settings")]
+    [SerializeField] private float fireRate = 0.4f;
+    [SerializeField] private float damage = 15f;
+    [SerializeField] private float fireRange = 30f;
+
+    [Header("Impact")]
+    [SerializeField] private GameObject impactPrefab;
 
     float nextFireTime;
 
-    public void ShootAt(Transform target)
+    void Update()
     {
-        if (Time.time < nextFireTime) return;
-        nextFireTime = Time.time + fireRate;
+        if (!target) return;
 
-        if (!muzzle) muzzle = transform;
+        float dist = Vector3.Distance(transform.position, target.position);
+        if (dist > fireRange) return;
 
-        Vector3 dir = (target.position + Vector3.up) - muzzle.position;
-        Ray ray = new Ray(muzzle.position, dir.normalized);
+        RotateToTarget();
 
-        Vector3 startPoint = muzzle.position;
-        Vector3 endPoint = muzzle.position + dir.normalized * fireDistance;
-
-        if (Physics.Raycast(ray, out RaycastHit hit, fireDistance))
+        if (Time.time >= nextFireTime)
         {
-            endPoint = hit.point;
-
-            Health hp = hit.collider.GetComponentInParent<Health>();
-            if (hp != null)
-                hp.TakeDamage(damage);
+            nextFireTime = Time.time + fireRate;
+            Fire();
         }
-
-        SpawnTracer(startPoint, endPoint);
-
-        Debug.DrawRay(startPoint, dir, Color.red, 0.2f);
     }
-    void SpawnTracer(Vector3 start, Vector3 end)
-    {
-        if (!tracerPrefab) return;
 
-        BulletTracer tracer = Instantiate(tracerPrefab);
-        tracer.Init(start, end);
+    void RotateToTarget()
+    {
+        Vector3 dir = target.position - transform.position;
+        dir.y = 0;
+
+        if (dir.sqrMagnitude < 0.01f) return;
+
+        Quaternion rot = Quaternion.LookRotation(dir);
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 6f);
+    }
+
+    void Fire()
+    {
+        if (!bulletPrefab||!muzzle||!target) return;
+
+        Vector3 dir = (target.position + Vector3.up * 1.4f - muzzle.position).normalized;
+
+        BulletProjectile bullet =
+            Instantiate(bulletPrefab, muzzle.position, Quaternion.LookRotation(dir));
+
+        bullet.damage = damage;
+        bullet.impactPrefab = impactPrefab;
+        bullet.Init(dir);
+    }
+
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
     }
 }

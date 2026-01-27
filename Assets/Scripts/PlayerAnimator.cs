@@ -2,54 +2,67 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-public class PlayerAnimator :  ITickable
+public class PlayerAnimator : ITickable
 {
-    private Animator animator;
-    private ThirdPersonMovement playerMovement;
-    private float speedDampTime = 0.1f;
-    private AimController aimController;
+    Animator animator;
+    ThirdPersonMovement playerMovement;
+    PlayerInput input;
+    AimController aimController;
 
-    [Inject] PlayerInput input;
     InputAction sprintAction;
 
     int speedHash;
     int isSprintingHash;
+    int isAimingHash;
 
-    public PlayerAnimator(Animator animator,
+    public PlayerAnimator(
+        Animator animator,
         ThirdPersonMovement thirdPersonMovement,
         PlayerInput playerInput,
         AimController aimController)
     {
         this.animator = animator;
-        if (!playerMovement) playerMovement = thirdPersonMovement;
-        
-        input = playerInput;
+        this.playerMovement = thirdPersonMovement;
+        this.input = playerInput;
+        this.aimController = aimController;
+
         sprintAction = input.actions["Sprint"];
 
-        // Cache animator parameter hashes
         speedHash = Animator.StringToHash("Speed");
         isSprintingHash = Animator.StringToHash("IsSprinting");
-        this.aimController = aimController;
+        isAimingHash = Animator.StringToHash("IsAiming");
     }
 
     public void Tick()
     {
+        if (!animator) return;
+
         UpdateMovementAnimation();
     }
 
     void UpdateMovementAnimation()
     {
-        // ËÎÃÈÊÀ ÑÎÕÐÀÍÅÍÀ:
-        // áåð¸ì ðåàëüíóþ ñêîðîñòü ïåðñîíàæà
-        float speed = playerMovement.CurrentSpeed;
+        float speed = playerMovement != null ? playerMovement.CurrentSpeed : 0f;
+        bool isSprinting = sprintAction != null && sprintAction.IsPressed();
+        bool isAiming = aimController != null && aimController.IsAiming();
 
-        animator.SetFloat(speedHash, speed, speedDampTime, Time.deltaTime);
+        if (HasParameter(speedHash))
+            animator.SetFloat(speedHash, speed, 0.1f, Time.deltaTime);
 
-        bool isSprinting =
-            sprintAction.IsPressed() &&
-            speed > 0.1f &&
-            (aimController == null || !aimController.IsAiming());
+        if (HasParameter(isSprintingHash))
+            animator.SetBool(isSprintingHash, isSprinting);
 
-        animator.SetBool(isSprintingHash, isSprinting);
+        if (HasParameter(isAimingHash))
+            animator.SetBool(isAimingHash, isAiming);
+    }
+
+    bool HasParameter(int hash)
+    {
+        foreach (var p in animator.parameters)
+        {
+            if (p.nameHash == hash)
+                return true;
+        }
+        return false;
     }
 }
