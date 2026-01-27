@@ -1,9 +1,12 @@
 using UnityEngine;
+using Zenject.SpaceFighter;
 
 public class Health : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
+
+    [SerializeField] bool isPlayer;
 
     public float CurrentHealth { get; private set; }
 
@@ -30,10 +33,26 @@ public class Health : MonoBehaviour
     {
         Debug.Log($"{name} died");
 
-        // Simple version:
-        Destroy(gameObject);
+        if (isPlayer)
+        {
+            // Disable logic on root
+            var move = GetComponent<ThirdPersonMovement>();
+            if (move) move.enabled = false;
 
-        // Later you can replace with:
-        // animation, ragdoll, pooling, etc.
+            var shooter = GetComponent<Shooter>();
+            if (shooter) shooter.enabled = false;
+
+            var controller = GetComponent<CharacterController>();
+            if (controller) controller.enabled = false;
+
+            // Enable ragdoll on model
+            RagdollController ragdoll = GetComponentInChildren<RagdollController>();
+            if (ragdoll)
+                ragdoll.SetRagdoll(true);
+
+            return;
+        }
+
+        Destroy(gameObject);
     }
 }
