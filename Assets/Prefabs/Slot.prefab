@@ -113,3 +113,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d55114fe7bac58448e71a7650107034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventorySlot
+  image: {fileID: 391945879459937712}
+  selectColor: {r: 1, g: 0.4292453, b: 0.4292453, a: 1}
+  notSelectColor: {r: 1, g: 0.9003632, b: 0, a: 1}

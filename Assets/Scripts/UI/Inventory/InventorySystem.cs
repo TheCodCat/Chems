@@ -1,16 +1,32 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
-public class InventorySystem : MonoBehaviour, IInitializable
+public class InventorySystem : MonoBehaviour, IInitializable, IDisposable
 {
     private InventorySlot[] slots;
     [SerializeField] private InventoryItem inventoryPrefab;
     [SerializeField] private InventoryItemObj inventoryObj;
+    [SerializeField] private int selectSlot = -1;
+
+    public InputActionProperty mouseAction;
+    public Vector2 mousePosition;
+
     [Inject]
     public void Construct(InventorySlot[] slots)
     {
         this.slots = slots;
+        mouseAction.action.Enable();
+        mouseAction.action.performed += Action_performed;
+        mouseAction.action.started += Action_performed;
     }
+
+    private void Action_performed(InputAction.CallbackContext obj)
+    {
+        mousePosition = obj.ReadValue<Vector2>();
+    }
+
     public void Initialize()
     {
         AddItem(inventoryObj);
@@ -18,6 +34,8 @@ public class InventorySystem : MonoBehaviour, IInitializable
         AddItem(inventoryObj);
         AddItem(inventoryObj);
         AddItem(inventoryObj);
+
+        ChangeSelectSlot(1);
     }
 
     public bool AddItem(InventoryItemObj inventoryItemObj)
@@ -51,6 +69,22 @@ public class InventorySystem : MonoBehaviour, IInitializable
     public void SpawnNewItem(InventoryItemObj inventoryItemObj, InventorySlot inventorySlot)
     {
         var newItem = Instantiate(inventoryPrefab, inventorySlot.transform);
-        newItem.Construct(inventoryItemObj);
+        newItem.Construct(this,inventoryItemObj);
+    }
+
+    public void ChangeSelectSlot(int newValue)
+    {
+        if (selectSlot > 0)
+            slots[selectSlot].Deselect();
+
+        slots[newValue].Select();
+        selectSlot = newValue;
+    }
+
+    public void Dispose()
+    {
+        mouseAction.action.Disable();
+        mouseAction.action.performed -= Action_performed;
+        mouseAction.action.started -= Action_performed;
     }
 }

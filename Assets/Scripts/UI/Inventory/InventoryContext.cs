@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Zenject;
 
 public class InventoryContext : MonoInstaller
@@ -7,7 +8,7 @@ public class InventoryContext : MonoInstaller
     [SerializeField] private InventorySlot[] slots;
     public override void InstallBindings()
     {
-        Container.BindInterfacesAndSelfTo<InventorySystem>().FromInstance(inventorySystem).AsSingle();
         Container.Bind<InventorySlot[]>().FromInstance(slots).AsSingle().NonLazy();
+        Container.BindInterfacesAndSelfTo<InventorySystem>().FromInstance(inventorySystem).AsSingle().NonLazy();
     }
 }
