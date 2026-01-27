@@ -87,4 +87,26 @@ public class InventorySystem : MonoBehaviour, IInitializable, IDisposable
         mouseAction.action.performed -= Action_performed;
         mouseAction.action.started -= Action_performed;
     }
+
+    public InventoryItemObj GetSelectedItem(bool use)
+    {
+        var slot = slots[selectSlot];
+        var inventoryItem = slot.GetComponentInChildren<InventoryItem>();
+        if(inventoryItem != null)
+        {
+            var item = inventoryItem.itemObj;
+            if (use)
+            {
+                inventoryItem.count--;
+                if (inventoryItem.count <= 0)
+                    Destroy(inventoryItem);
+                else
+                    inventoryItem.RefrashCount();
+            }
+
+            return item;
+        }
+
+        return null;
+    }
 }
