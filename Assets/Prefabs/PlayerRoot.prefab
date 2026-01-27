@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &638723035712388534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7501220177664540075}
+  m_Layer: 6
+  m_Name: Muzzle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7501220177664540075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 638723035712388534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.485, z: 0.4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5202259810017102848}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2720168813284258234
 GameObject:
   m_ObjectHideFlags: 0
@@ -18,6 +49,7 @@ GameObject:
   - component: {fileID: 8370684980239045132}
   - component: {fileID: 3369478891880853688}
   - component: {fileID: 944224514857968748}
+  - component: {fileID: 7831820553281679747}
   m_Layer: 6
   m_Name: PlayerRoot
   m_TagString: Untagged
@@ -40,6 +72,7 @@ Transform:
   m_Children:
   - {fileID: 8698478353888865666}
   - {fileID: 875813676847071076}
+  - {fileID: 7501220177664540075}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &6872819276019198016
@@ -95,6 +128,7 @@ MonoBehaviour:
   sprintSpeed: 8
   rotationSpeed: 12
   gravity: -20
+  input: {fileID: 0}
 --- !u!114 &368734277267131647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,43 +145,24 @@ MonoBehaviour:
   left: {x: -0.5, y: 1.8, z: 0}
   target: {fileID: 875813676847071076}
   duration: 0.5
-  actionRight:
+  isRight: 1
+  actionChange:
     m_UseReference: 0
     m_Action:
-      m_Name: Action Right
+      m_Name: Action Change
       m_Type: 0
       m_ExpectedControlType: 
-      m_Id: 45edc91f-c6a2-4448-8eb2-e3341a3bba95
+      m_Id: f6cd8010-a426-4267-aceb-972e2ce59120
       m_Processors: 
       m_Interactions: 
       m_SingletonActionBindings:
       - m_Name: 
-        m_Id: 41b2545e-96a9-4ba9-bbd7-a2dc124c6319
-        m_Path: <Keyboard>/e
+        m_Id: a8a93b48-c921-49a7-b953-03c1dd7cfb73
+        m_Path: <Keyboard>/x
         m_Interactions: 
         m_Processors: 
         m_Groups: 
-        m_Action: Action Right
-        m_Flags: 0
-      m_Flags: 0
-    m_Reference: {fileID: 0}
-  actionLeft:
-    m_UseReference: 0
-    m_Action:
-      m_Name: Action Left
-      m_Type: 0
-      m_ExpectedControlType: 
-      m_Id: 34ee987b-0a7b-4579-b065-078fa1bf095b
-      m_Processors: 
-      m_Interactions: 
-      m_SingletonActionBindings:
-      - m_Name: 
-        m_Id: aee61944-2fea-4471-b1d7-89ae8c179840
-        m_Path: <Keyboard>/q
-        m_Interactions: 
-        m_Processors: 
-        m_Groups: 
-        m_Action: Action Left
+        m_Action: Action Change
         m_Flags: 0
       m_Flags: 0
     m_Reference: {fileID: 0}
@@ -305,6 +320,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerObjContext
   camTarget: {fileID: 0}
+  thirdPerson: {fileID: 5111587479518371118}
+  CMChangeView: {fileID: 368734277267131647}
 --- !u!114 &944224514857968748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,6 +340,49 @@ MonoBehaviour:
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
+--- !u!114 &7831820553281679747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2720168813284258234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8d0681c81b40b4fa987120c50b69d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Shooter
+  playerCamera: {fileID: 0}
+  aimController: {fileID: 6611182224397429440}
+  fireRate: 0.15
+  fireDistance: 50
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 183
+  fireAction:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Fire
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 153ff1f8-2c32-4f62-92b2-4cffc01deaf4
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings:
+      - m_Name: 
+        m_Id: 868c50a8-80ea-4045-a09b-e13493b3ee37
+        m_Path: <Mouse>/leftButton
+        m_Interactions: 
+        m_Processors: 
+        m_Groups: 
+        m_Action: Fire
+        m_Flags: 0
+      m_Flags: 0
+    m_Reference: {fileID: 0}
+  tracerPrefab: {fileID: 6390930830456022657, guid: c6ba2ebde975dcb4693de7aa0bcce545, type: 3}
+  muzzle: {fileID: 7501220177664540075}
+  damage: 25
+  impactPrefab: {fileID: 2554499146558399278, guid: 0b60edd4660bfc3419a4ef1e6d768e79, type: 3}
 --- !u!1 &3565417780925988765
 GameObject:
   m_ObjectHideFlags: 0
