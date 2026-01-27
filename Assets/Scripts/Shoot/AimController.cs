@@ -8,6 +8,9 @@ public class AimController : MonoBehaviour
     [SerializeField] private CinemachineCamera cinemachineCamera;
     [SerializeField] private Transform playerRoot;
 
+    [SerializeField] private Health health;
+    private bool isDie;
+
     [Header("Orbital Settings")]
     [SerializeField] private float normalRadius = 4f;
     [SerializeField] private float aimRadius = 2.2f;
@@ -41,6 +44,13 @@ public class AimController : MonoBehaviour
         }
 
         aimAction.action.Enable();
+
+        health.isDie.Changed += IsDie_Changed;
+    }
+
+    private void IsDie_Changed(bool obj)
+    {
+        isDie = obj;
     }
 
     void Update()
@@ -61,6 +71,7 @@ public class AimController : MonoBehaviour
 
     void HandleRotation()
     {
+        if (isDie) return;
         if (!isAiming) return;
 
         Vector3 camForward = Camera.main.transform.forward;

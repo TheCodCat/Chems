@@ -46,14 +46,13 @@ GameObject:
   - component: {fileID: 368734277267131647}
   - component: {fileID: 6611182224397429440}
   - component: {fileID: 7741705576352713425}
-  - component: {fileID: 8370684980239045132}
   - component: {fileID: 3369478891880853688}
   - component: {fileID: 944224514857968748}
   - component: {fileID: 7831820553281679747}
   - component: {fileID: 2620671748081596330}
   m_Layer: 6
   m_Name: PlayerRoot
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,6 +146,7 @@ MonoBehaviour:
   target: {fileID: 875813676847071076}
   duration: 0.5
   isRight: 1
+  Health: {fileID: 2620671748081596330}
   actionChange:
     m_UseReference: 0
     m_Action:
@@ -181,6 +181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AimController
   cinemachineCamera: {fileID: 0}
   playerRoot: {fileID: 5202259810017102848}
+  health: {fileID: 2620671748081596330}
   normalRadius: 4
   aimRadius: 2.2
   camLerpSpeed: 8
@@ -281,33 +282,6 @@ MonoBehaviour:
           m_Flags: 0
         m_Flags: 0
       m_Reference: {fileID: 0}
---- !u!54 &8370684980239045132
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2720168813284258234}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &3369478891880853688
 MonoBehaviour:
   m_ObjectHideFlags: 0

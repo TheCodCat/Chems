@@ -5,8 +5,14 @@ public class Health : MonoBehaviour
 {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100f;
+    [Header("Respawn")]
+    [SerializeField] private float respawnDelay = 3f;
+    [SerializeField] private Transform respawnPoint;
+
+    bool dead;
 
     [SerializeField] bool isPlayer;
+    public ReactiveProperty<bool> isDie = new ReactiveProperty<bool>();
 
     public float CurrentHealth { get; private set; }
 
@@ -31,28 +37,75 @@ public class Health : MonoBehaviour
 
     void Die()
     {
+        if (dead) return;
+        dead = true;
+
         Debug.Log($"{name} died");
 
         if (isPlayer)
         {
-            // Disable logic on root
             var move = GetComponent<ThirdPersonMovement>();
             if (move) move.enabled = false;
 
             var shooter = GetComponent<Shooter>();
             if (shooter) shooter.enabled = false;
 
+            var aim = GetComponent<AimController>();
+            if (aim) aim.enabled = false;
+
             var controller = GetComponent<CharacterController>();
             if (controller) controller.enabled = false;
 
-            // Enable ragdoll on model
+            var swap = GetComponentInChildren<CMChangeView>();
+            if (swap) swap.enabled = false;
+
             RagdollController ragdoll = GetComponentInChildren<RagdollController>();
             if (ragdoll)
                 ragdoll.SetRagdoll(true);
 
+            isDie.Value = true;
+
+            Invoke(nameof(Respawn), respawnDelay);
             return;
         }
 
         Destroy(gameObject);
+    }
+    void Respawn()
+    {
+        Debug.Log("RESPAWN");
+
+        dead = false;
+        CurrentHealth = maxHealth;
+        isDie.Value = false;
+
+        if (respawnPoint)
+        {
+            transform.position = respawnPoint.position;
+            transform.rotation = respawnPoint.rotation;
+        }
+
+        RagdollController ragdoll = GetComponentInChildren<RagdollController>();
+        if (ragdoll)
+        {
+            ragdoll.SetRagdoll(false);
+            ragdoll.transform.localPosition = Vector3.zero;
+            ragdoll.transform.localRotation = Quaternion.identity;
+        }
+
+        var controller = GetComponent<CharacterController>();
+        if (controller) controller.enabled = true;
+
+        var move = GetComponent<ThirdPersonMovement>();
+        if (move) move.enabled = true;
+
+        var shooter = GetComponent<Shooter>();
+        if (shooter) shooter.enabled = true;
+
+        var aim = GetComponent<AimController>();
+        if (aim) aim.enabled = true;
+
+        var swap = GetComponentInChildren<CMChangeView>();
+        if (swap) swap.enabled = true;
     }
 }
